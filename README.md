@@ -1,7 +1,7 @@
 # myobjectdetection2
 本次作业主要历程如下
 ## 一，根据quiz-w8-data做成TFrecord
-1)安装ubuntu系统搭建Ubuntu环境，使用Ubuntu自带Python2.7和Python 3.5。
+1)安装ubuntu系统搭建Ubuntu环境，使用Ubuntu自带Python2.7和Python 3.5。\\
 2)根据https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md
 的内容安装object_detection模块。(其中根据报错内容和百度查询完成相关Python库的安装，如Python-tk,numpy等)
 3)修改create_pet_tf_record.py:
