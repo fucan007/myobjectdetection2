@@ -10,7 +10,7 @@ export PYTHONPATH=$PYTHONPATH:$DIR:$DIR/slim:$DIR/object_detection
 
 # 定义各目录
 output_dir=/output  # 训练目录
-dataset_dir=/data/u012160945/databaseforw8 # 数据集目录，这里是写死的，记得修改
+dataset_dir=/home/fucan/fucan/AI/data # 数据集目录，这里是写死的，记得修改
 
 train_dir=$output_dir/train
 checkpoint_dir=$train_dir
@@ -26,7 +26,7 @@ rm -rvf $output_dir/*
 # 因为dataset里面的东西是不允许修改的，所以这里要把config文件复制一份到输出目录
 cp $DIR/$config $pipeline_config_path
 
-for i in {0..8}  # for循环中的代码执行5此，这里的左右边界都包含，也就是一共训练500个step，每100step验证一次
+for i in {0..20}  # for循环中的代码执行5此，这里的左右边界都包含，也就是一共训练500个step，每100step验证一次
 do
     echo "############" $i "runnning #################"
     last=$[$i*100]
@@ -34,14 +34,14 @@ do
     sed -i "s/^  num_steps: $last$/  num_steps: $current/g" $pipeline_config_path  # 通过num_steps控制一次训练最多100step
 
     echo "############" $i "training #################"
-    python ./object_detection/train.py --train_dir=$train_dir --pipeline_config_path=$pipeline_config_path
+    python3 ./object_detection/train.py --train_dir=$train_dir --pipeline_config_path=$pipeline_config_path
 
     echo "############" $i "evaluating, this takes a long while #################"
-    python ./object_detection/eval.py --checkpoint_dir=$checkpoint_dir --eval_dir=$eval_dir --pipeline_config_path=$pipeline_config_path
+    python3 ./object_detection/eval.py --checkpoint_dir=$checkpoint_dir --eval_dir=$eval_dir --pipeline_config_path=$pipeline_config_path
 done
 
 # 导出模型
-python ./object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path $pipeline_config_path --trained_checkpoint_prefix $train_dir/model.ckpt-$current  --output_directory $output_dir/exported_graphs
+python3 ./object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path $pipeline_config_path --trained_checkpoint_prefix $train_dir/model.ckpt-$current  --output_directory $output_dir/exported_graphs
 
 # 在test.jpg上验证导出的模型
-python ./inference.py --output_dir=$output_dir --dataset_dir=$dataset_dir
+python3 ./inference.py --output_dir=$output_dir --dataset_dir=$dataset_dir
